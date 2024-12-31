@@ -1,45 +1,43 @@
-import { Agent } from '../types/agent';
-import { Brain, Code2, Palette, LineChart, UserCog } from 'lucide-react';
+export interface Agent {
+  id: string;
+  name: string;
+  role: string;
+  description: string;
+  avatar: string;
+  isActive: boolean;
+}
 
-export const agents: Agent[] = [
+export const defaultAgents: Agent[] = [
   {
-    id: 'ceo',
-    role: 'CEO',
-    description: 'Strategic vision and decision making',
-    color: '#3B82F6',
-    avatar: Brain,
+    id: "facilitator",
+    name: "Alex",
+    role: "Meeting Facilitator",
+    description: "Guides the discussion and ensures everyone stays on track",
+    avatar: "👨‍💼",
     isActive: true
   },
   {
-    id: 'developer',
-    role: 'Developer',
-    description: 'Technical implementation and architecture',
-    color: '#10B981',
-    avatar: Code2,
+    id: "tech_expert",
+    name: "Taylor",
+    role: "Technical Expert",
+    description: "Provides technical insights and solutions",
+    avatar: "👩‍💻",
     isActive: true
   },
   {
-    id: 'designer',
-    role: 'Brand Strategist',
-    description: 'Visual identity and user experience',
-    color: '#EC4899',
-    avatar: Palette,
+    id: "analyst",
+    name: "Jordan",
+    role: "Business Analyst",
+    description: "Analyzes business impact and requirements",
+    avatar: "📊",
     isActive: true
   },
   {
-    id: 'analyst',
-    role: 'Data Analyst',
-    description: 'Metrics and performance insights',
-    color: '#8B5CF6',
-    avatar: LineChart,
-    isActive: true
-  },
-  {
-    id: 'moderator',
-    role: 'Moderator',
-    description: 'Discussion facilitation and summaries',
-    color: '#6B7280',
-    avatar: UserCog,
-    isActive: true
+    id: "creative",
+    name: "Sam",
+    role: "Creative Director",
+    description: "Offers creative and design-focused perspectives",
+    avatar: "🎨",
+    isActive: false
   }
 ];

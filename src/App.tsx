@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { ChatMessage } from './components/ChatMessage';
 import { ChatInput } from './components/ChatInput';
@@ -7,12 +7,25 @@ import { Play } from 'lucide-react';
 import { useChat } from './hooks/useChat';
 import { useAgents } from './hooks/useAgents';
 import { useSession } from './context/SessionContext';
+import { AgentService } from './services/agentService';
 
 export default function App() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const { isSessionStarted, startSession } = useSession();
   const { messages, isLoading, addMessage } = useChat();
   const { agents, toggleAgent } = useAgents();
+  const [summary, setSummary] = useState('No discussion yet.');
+  const [actionItems, setActionItems] = useState<string[]>([]);
+
+  // Update summary and action items when messages change
+  useEffect(() => {
+    if (messages.length > 0) {
+      // Update summary
+      AgentService.generateSummary(messages).then(setSummary);
+      // Update action items
+      AgentService.generateActionItems(messages).then(setActionItems);
+    }
+  }, [messages]);
 
   if (!isSessionStarted) {
     return (
@@ -20,7 +33,7 @@ export default function App() {
         <div className="text-center">
           <h1 className="text-4xl font-bold mb-6">AI Board Room</h1>
           <button
-            onClick={startSession}
+            onClick={() => startSession()}
             className="inline-flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           >
             <Play size={20} />
@@ -58,12 +71,8 @@ export default function App() {
       </div>
 
       <SummaryPanel
-        summary="The discussion is focused on project timeline and resource allocation. The team is aligned on the main objectives but needs to finalize the technical specifications."
-        actionItems={[
-          "Schedule technical review meeting",
-          "Create detailed resource allocation plan",
-          "Follow up on pending vendor approvals"
-        ]}
+        summary={summary}
+        actionItems={actionItems}
       />
     </div>
   );

@@ -1,30 +1,29 @@
 import { useState } from 'react';
-import { Message } from '../types/agent';
-import { sendMessage } from '../services/api';
+import { Message, AgentService } from '../services/agentService';
+import { Agent } from '../data/agents';
 
 export function useChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const addMessage = async (content: string, targetAgents: string[]) => {
-    setIsLoading(true);
-    
+  const addMessage = async (content: string, activeAgents: Agent[]) => {
+    // Add user message
     const userMessage: Message = {
-      id: Math.random().toString(),
-      agentId: 'user',
+      id: Math.random().toString(36).substring(2),
       content,
+      sender: 'You',
       timestamp: new Date()
     };
     
-    setMessages(prev => [...prev, userMessage]);
-
+    setMessages((prev: Message[]) => [...prev, userMessage]);
+    
+    // Get AI response
+    setIsLoading(true);
     try {
-      const response = await sendMessage(content, targetAgents);
-      if (response.success) {
-        setMessages(prev => [...prev, ...response.responses]);
-      }
+      const agentResponse = await AgentService.getAgentResponse(content, activeAgents);
+      setMessages((prev: Message[]) => [...prev, agentResponse]);
     } catch (error) {
-      console.error('Failed to send message:', error);
+      console.error('Error getting agent response:', error);
     } finally {
       setIsLoading(false);
     }

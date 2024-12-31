@@ -1,6 +1,6 @@
 import React from 'react';
-import { Agent } from '../types/agent';
-import { Switch } from './Switch';
+import { Agent } from '../data/agents';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface SidebarProps {
   agents: Agent[];
@@ -11,47 +11,41 @@ interface SidebarProps {
 
 export function Sidebar({ agents, onToggleAgent, isCollapsed, onToggleCollapse }: SidebarProps) {
   return (
-    <div className={`bg-white border-r border-gray-200 transition-all duration-300 ${
-      isCollapsed ? 'w-16' : 'w-80'
+    <div className={`bg-white border-r border-gray-200 transition-all ${
+      isCollapsed ? 'w-16' : 'w-64'
     }`}>
-      <div className="p-4 border-b border-gray-200 flex items-center justify-between">
-        <h2 className={`font-semibold ${isCollapsed ? 'hidden' : 'block'}`}>Board Members</h2>
+      <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+        {!isCollapsed && <h2 className="font-semibold">AI Agents</h2>}
         <button
           onClick={onToggleCollapse}
-          className="p-2 hover:bg-gray-100 rounded-lg"
+          className="p-1 hover:bg-gray-100 rounded-lg"
         >
-          {isCollapsed ? '→' : '←'}
+          {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
         </button>
       </div>
+      
       <div className="p-4">
         {agents.map((agent) => (
           <div
             key={agent.id}
-            className={`mb-4 flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'}`}
+            className={`mb-3 ${isCollapsed ? 'text-center' : ''}`}
           >
-            <div className="flex items-center">
-              <div
-                className="w-8 h-8 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: `${agent.color}20` }}
-              >
-                {React.createElement(agent.avatar, {
-                  size: 20,
-                  color: agent.color,
-                })}
-              </div>
+            <button
+              onClick={() => onToggleAgent(agent.id)}
+              className={`w-full p-2 rounded-lg transition-colors flex items-center gap-2 ${
+                agent.isActive
+                  ? 'bg-indigo-50 text-indigo-600'
+                  : 'text-gray-600 hover:bg-gray-50'
+              }`}
+            >
+              <span className="flex-shrink-0">{agent.avatar}</span>
               {!isCollapsed && (
-                <div className="ml-3">
-                  <div className="font-medium">{agent.role}</div>
-                  <div className="text-sm text-gray-500">{agent.description}</div>
+                <div className="text-left">
+                  <div className="font-medium">{agent.name}</div>
+                  <div className="text-xs opacity-75">{agent.role}</div>
                 </div>
               )}
-            </div>
-            {!isCollapsed && (
-              <Switch
-                checked={agent.isActive}
-                onChange={() => onToggleAgent(agent.id)}
-              />
-            )}
+            </button>
           </div>
         ))}
       </div>
