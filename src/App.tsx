@@ -12,7 +12,7 @@ import { AgentService } from './services/agentService';
 export default function App() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const { isSessionStarted, startSession } = useSession();
-  const { messages, isLoading, addMessage } = useChat();
+  const { messages, isLoading, addMessage, thinkingAgentId } = useChat();
   const { agents, toggleAgent } = useAgents();
   const [summary, setSummary] = useState('No discussion yet.');
   const [actionItems, setActionItems] = useState<string[]>([]);
@@ -51,6 +51,7 @@ export default function App() {
         onToggleAgent={toggleAgent}
         isCollapsed={isSidebarCollapsed}
         onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+        thinkingAgentId={thinkingAgentId}
       />
       
       <div className="flex-1 flex flex-col">

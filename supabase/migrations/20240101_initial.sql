@@ -39,9 +39,10 @@ ALTER TABLE agent_configs ENABLE ROW LEVEL SECURITY;
 DO $$ 
 BEGIN
     DROP POLICY IF EXISTS "Allow public read access to sessions" ON sessions;
+    DROP POLICY IF EXISTS "Allow public write access to sessions" ON sessions;
     DROP POLICY IF EXISTS "Allow public read access to messages" ON messages;
+    DROP POLICY IF EXISTS "Allow public write access to messages" ON messages;
     DROP POLICY IF EXISTS "Allow public read access to agent_configs" ON agent_configs;
-    DROP POLICY IF EXISTS "Allow public insert to messages" ON messages;
 EXCEPTION
     WHEN undefined_object THEN
         NULL;
@@ -52,17 +53,21 @@ CREATE POLICY "Allow public read access to sessions"
     ON sessions FOR SELECT
     USING (true);
 
+CREATE POLICY "Allow public write access to sessions"
+    ON sessions FOR INSERT
+    WITH CHECK (true);
+
 CREATE POLICY "Allow public read access to messages"
     ON messages FOR SELECT
     USING (true);
 
+CREATE POLICY "Allow public write access to messages"
+    ON messages FOR INSERT
+    WITH CHECK (true);
+
 CREATE POLICY "Allow public read access to agent_configs"
     ON agent_configs FOR SELECT
     USING (true);
-
-CREATE POLICY "Allow public insert to messages"
-    ON messages FOR INSERT
-    WITH CHECK (true);
 
 -- Insert default agent configurations
 INSERT INTO agent_configs (id, name, role, system_prompt, is_active)

@@ -6,10 +6,25 @@ if (!apiKey) {
   throw new Error('Missing OpenAI API key');
 }
 
+// Create OpenAI client with error handling
 export const openai = new OpenAI({
   apiKey,
   dangerouslyAllowBrowser: true // Note: In production, you should proxy through your backend
 });
+
+// Test the OpenAI connection
+(async () => {
+  try {
+    const test = await openai.chat.completions.create({
+      model: "gpt-4",
+      messages: [{ role: "system", content: "Test connection" }],
+      max_tokens: 5
+    });
+    console.log('OpenAI connection successful');
+  } catch (error) {
+    console.error('OpenAI connection error:', error);
+  }
+})();
 
 export const AGENT_PROMPTS = {
   facilitator: `You are Alex, a skilled meeting facilitator. Your role is to:
@@ -38,5 +53,12 @@ Please respond with business-focused insights.`,
 - Suggest innovative solutions
 - Consider user experience
 - Think outside the box
-Please respond with creative and user-centered suggestions.`
+Please respond with creative and user-centered suggestions.`,
+
+  researcher: `You are Robin, a research specialist. Your role is to:
+- Perform internet searches for relevant information
+- Provide up-to-date data and insights
+- Support other agents with factual information
+- Synthesize and summarize search results
+Please respond with well-researched, factual information and always cite your sources.`
 }; 

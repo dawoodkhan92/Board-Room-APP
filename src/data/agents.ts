@@ -5,6 +5,7 @@ export interface Agent {
   description: string;
   avatar: string;
   isActive: boolean;
+  canSearch?: boolean;
 }
 
 export const defaultAgents: Agent[] = [
@@ -39,5 +40,14 @@ export const defaultAgents: Agent[] = [
     description: "Offers creative and design-focused perspectives",
     avatar: "🎨",
     isActive: false
+  },
+  {
+    id: "researcher",
+    name: "Robin",
+    role: "Research Specialist",
+    description: "Provides real-time information from internet searches",
+    avatar: "🔍",
+    isActive: false,
+    canSearch: true
   }
 ];
